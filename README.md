@@ -12,11 +12,11 @@ A convolutional network that reads MNIST digits, with every operation written by
 
 ## Result
 
-Ten epochs over the 60,000 training images at a learning rate of 0.01. Training loss fell from 0.0503 to 0.0337 and flattened out after the fourth epoch. Accuracy on the 10,000 held-out test images: **88.19%**. The seed is fixed in `initialize_weights`, so a rerun reproduces those numbers exactly.
+Ten epochs over the 60,000 training images at a learning rate of 0.01, one image at a time. Training loss fell from 0.507 to 0.128 and was still dropping when it stopped. Accuracy on the 10,000 held-out test images: **96.29%**. The seed is fixed in `initialize_weights`, so a rerun reproduces those numbers exactly.
 
 ## What it showed
 
-Writing backpropagation by hand shows you exactly what you did and did not derive. The dense weights update on the true gradient of the loss. The convolutional kernels do not: their update is the activation derivative convolved with the input, which never chains back through the pooling layer and never sees the label at all. The network reaches 88.19% anyway, which is the uncomfortable part. Shapes line up and loss goes down whether or not the maths behind them is right.
+The interesting part is the check, not the accuracy. A hand-written backward pass will run perfectly happily while being wrong: the shapes line up, the loss goes down, the final number looks plausible. The only thing that settles it is finite differences, nudging one weight at a time and comparing the measured change in loss against the gradient you derived. Run against my first derivation, that check found a kernel gradient roughly 278 times too large, one that stopped at the pooling layer and never picked up the term from the loss at all. The version here agrees with numerical gradients to eight digits.
 
 ## Run it
 
@@ -33,4 +33,4 @@ Run the cells top to bottom. The first run pulls `mnist.npz` (11 MB) next to the
 curl -O https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz
 ```
 
-Training is a Python loop over one image at a time, so all ten epochs take roughly an hour on a laptop. Slice `x_train` down to a few thousand images to watch it work in under a minute.
+Training is a Python loop over one image at a time, so all ten epochs take about 35 minutes on a laptop. Slice `x_train` down to a few thousand images to watch it work in under a minute.
