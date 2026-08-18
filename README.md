@@ -16,7 +16,7 @@ Ten epochs over the 60,000 training images at a learning rate of 0.01. Training 
 
 ## What it showed
 
-Writing backpropagation by hand makes the gaps visible. The dense layer here learns from the loss, but the convolutional kernels update on the activation derivative convolved with the input, a step that never chains back through the pooling layer. So the filters drift rather than train, and 88% comes almost entirely from a single dense layer sitting on top of them. Nothing in a framework would have told me that; the shapes all line up and the loss still goes down.
+Writing backpropagation by hand shows you exactly what you did and did not derive. The dense weights update on the true gradient of the loss. The convolutional kernels do not: their update is the activation derivative convolved with the input, which never chains back through the pooling layer and never sees the label at all. The network reaches 88.19% anyway, which is the uncomfortable part. Shapes line up and loss goes down whether or not the maths behind them is right.
 
 ## Run it
 
@@ -24,7 +24,7 @@ NumPy is the only dependency.
 
 ```bash
 pip install numpy jupyter
-jupyter notebook numPyCNN.ipynb
+jupyter notebook numpy-cnn.ipynb
 ```
 
 Run the cells top to bottom. The first run pulls `mnist.npz` (11 MB) next to the notebook and caches it there. If that download fails with an SSL certificate error, which some Python installs on macOS do, fetch it yourself first:
