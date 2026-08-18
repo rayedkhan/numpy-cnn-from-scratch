@@ -14,10 +14,6 @@ A convolutional network that reads MNIST digits, with every operation written by
 
 Ten epochs over the 60,000 training images at a learning rate of 0.01, one image at a time. Training loss fell from 0.507 to 0.128 and was still dropping when it stopped. Accuracy on the 10,000 held-out test images: **96.29%**. The seed is fixed in `initialize_weights`, so a rerun reproduces those numbers exactly.
 
-## What it showed
-
-The interesting part is the check, not the accuracy. A hand-written backward pass will run perfectly happily while being wrong: the shapes line up, the loss goes down, the final number looks plausible. The only thing that settles it is finite differences, nudging one weight at a time and comparing the measured change in loss against the gradient you derived. Run against my first derivation, that check found a kernel gradient roughly 278 times too large, one that stopped at the pooling layer and never picked up the term from the loss at all. The version here agrees with numerical gradients to eight digits.
-
 ## Run it
 
 NumPy is the only dependency.
